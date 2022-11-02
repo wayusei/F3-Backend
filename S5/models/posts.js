@@ -18,7 +18,7 @@ const Post = sequelize.define('Post', {
     Content:{
         type: DataTypes.STRING
     },
-    Categoria:{
+    Category:{
         type: DataTypes.STRING
     },
     Autor:{
