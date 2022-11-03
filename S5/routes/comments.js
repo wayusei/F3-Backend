@@ -1,38 +1,52 @@
 const express = require('express')
+const sequelize = require('../config/database')
 const router = express.Router()
 
-let data = [
-  {
-    id: 1,
-    comment: 'Quiero saber más',
-    post: 1,
-    user: 1
-  },
-  {
-    id: 2,
-    comment: 'No estoy de acuerdo',
-    post: 2,
-    user: 2
-  }
-]
-// GET -> Obtener
-router.get('/', (request, response) => {
-  response.send(data) 
+//GET -> Obtener
+router.get('/', async (req, res) => {
+  return await sequelize.models.Comments.findAll()
+    .then(data => res.json(data))
+    .catch(err => res.json({ message: 'Error', data:err }))
 })
 // POST -> Añadir
-router.post('/', (request,response) => {
-  data.push(request.body)
-  response.send(`${request.body.id} agregado`)
+router.post('/', async (req,res) => {
+  const { body } = req
+  return await sequelize.models.Comments.create({
+    comment: body.comment,
+    post: body.post,
+    user: body.user
+  })
+  .then(data => res.json({ message: 'Created', data }))
+  .catch(err => res.json({ message: 'Error', data: err }))
 })
 // PATCH -> Editar
-router.patch('/', (request,response) => {
-  data[request.body.id - 1] = request.body
-  response.send(`${request.body.id} modificado`)
+router.put('/:id', async (req,res) => {
+  const { body, params: { id } } = req
+  const Comment = await sequelize.models.Comments.findOne({
+    where: { id: id }
+  })
+  if (!Comment){
+    return res.status(404).json({ message: 'Comment not found' })
+  }
+  const data = await Comment.update({
+    comment: body.comment,
+    post: body.post,
+    user: body.user
+  })
+  return res.json({message: 'Comment updated', data})
 })
-// DELETE -> Eliminar
-router.delete('/', (request,response) => {
-  data = data.filter(item => item.id !== request.body.id)
-  response.send(`${request.body.id} eliminada`)
+// DELETE -> Eliminar ✔
+router.delete('/:id', async (req,res) => {
+  const { params: { id } } = req
+  const Comment = await sequelize.models.Comments.findOne({
+    where: { id: id }
+  })
+  if (!Comment){
+    return res.status(404).json({ message: 'Comment not found' })
+  }
+  const data = await Comment.destroy()
+  return res.json({ message: 'Deleted', data})
 })
+
 
 module.exports = router

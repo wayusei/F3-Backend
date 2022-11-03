@@ -1,11 +1,9 @@
 const { Sequelize, DataTypes} = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../config/database');
 
-const User = sequelize.define('User', {
+const UserModel = (sequelize) => sequelize.define('Users', {
     id:{
-        type: DataTypes.INTEGER,
-        primaryKey:true,
-        allowNull: false
+        type: DataTypes.INTEGER, primaryKey:true, allowNull: false, autoIncrement: true
     },
     firstName:{
         type: DataTypes.STRING
@@ -26,9 +24,7 @@ const User = sequelize.define('User', {
 },
 {
     freezeTableName: true,
-    timestamps:false
+    timestamps:true
 });
 
-User.hasMany(Post);
-
-module.exports = User;
+module.exports = UserModel;

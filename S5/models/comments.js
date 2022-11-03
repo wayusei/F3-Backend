@@ -1,29 +1,30 @@
 
 const { Sequelize, DataTypes} = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../config/database');
 
-const Comment = sequelize.define('Comment', {
+
+const CommentModel = (sequelize) => sequelize.define('Comments', {
     id:{
         type: DataTypes.INTEGER,
         primaryKey:true,
+        allowNull: false,
+        autoIncrement: true
+    },
+    comment:{
+        type: DataTypes.STRING
+    },
+    post:{
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    Comment:{
-        type: DataTypes.STRING
-    },
-    Category:{
-        type: DataTypes.STRING
-    },
-    Autor:{
+    user:{
         type: DataTypes.INTEGER,
         allowNull: false
     }
 },
 {
     freezeTableName: true,
-    timestamps:false
+    timestamps:true
 });
 
-User.hasMany(Post);
-
-module.exports = User;
+module.exports = CommentModel;

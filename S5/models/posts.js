@@ -4,9 +4,9 @@
 // Autor.
 
 const { Sequelize, DataTypes} = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../config/database');
 
-const Post = sequelize.define('Post', {
+const PostModel = (sequelize) => sequelize.define('Posts', {
     id:{
         type: DataTypes.INTEGER,
         primaryKey:true,
@@ -21,7 +21,7 @@ const Post = sequelize.define('Post', {
     Category:{
         type: DataTypes.STRING
     },
-    Autor:{
+    Author:{
         type: DataTypes.INTEGER,
         allowNull: false
     }
@@ -31,6 +31,6 @@ const Post = sequelize.define('Post', {
     timestamps:false
 });
 
-User.hasMany(Post);
+//UserModel.hasMany(PostModel);
 
-module.exports = User;
+module.exports = PostModel;
